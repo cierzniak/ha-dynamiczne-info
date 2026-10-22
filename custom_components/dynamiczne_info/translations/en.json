@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "dynamiczne.info",
+        "description": "Pick your distribution operator.",
+        "data": { "operator": "Operator" }
+      },
+      "tariff": {
+        "title": "Tariff",
+        "data": {
+          "tariff": "Tariff",
+          "include_sell": "Also fetch sell (buy-back) prices"
+        }
+      }
+    },
+    "error": { "cannot_connect": "Could not reach the dynamiczne.info API." },
+    "abort": {
+      "already_configured": "This operator/tariff is already configured.",
+      "cannot_connect": "Could not reach the dynamiczne.info API."
+    }
+  },
+  "config_subentries": {
+    "load": {
+      "initiate_flow": { "user": "Add load" },
+      "entry_type": "Load",
+      "step": {
+        "user": {
+          "title": "Add a load",
+          "description": "A schedulable device (EV charger, boiler, ...).",
+          "data": { "name": "Name" }
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_price": { "name": "Current price" },
+      "current_advice": {
+        "name": "Advice",
+        "state": { "use": "Use", "neutral": "Neutral", "limit": "Limit" }
+      },
+      "current_sell_price": { "name": "Current sell price" },
+      "next_cheap_hour": { "name": "Next cheap hour" },
+      "next_sell_hour": { "name": "Next sell hour" },
+      "cheapest_hour_today": { "name": "Cheapest hour today" },
+      "planned_start": { "name": "Planned start" }
+    },
+    "binary_sensor": {
+      "sell_now": { "name": "Sell now" },
+      "run_now": { "name": "Run now" }
+    },
+    "switch": {
+      "schedule": { "name": "Schedule" }
+    },
+    "select": {
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "cheapest_window": "Cheapest window",
+          "fixed": "Fixed start",
+          "price_below": "Below price ceiling",
+          "advice_use": "Recommended hours (use)"
+        }
+      }
+    },
+    "number": {
+      "duration": { "name": "Duration (hours)" },
+      "price_ceiling": { "name": "Price ceiling" }
+    },
+    "time": {
+      "ready_by": { "name": "Ready by" },
+      "start_at": { "name": "Start at" },
+      "stop_at": { "name": "Stop at" }
+    }
+  }
+}

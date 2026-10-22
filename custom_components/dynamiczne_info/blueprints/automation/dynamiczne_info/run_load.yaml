@@ -1,0 +1,52 @@
+blueprint:
+  name: dynamiczne.info - uruchom odbiornik w zaplanowanych godzinach
+  description: >
+    Wlacza i wylacza urzadzenie wedlug sygnalu "uruchom teraz" (run_now)
+    wystawianego przez helper odbiornika dynamiczne.info. Wskaz sygnal run_now
+    odbiornika oraz akcje startu i stopu (np. wlaczenie/wylaczenie ladowarki).
+  domain: automation
+  source_url: https://github.com/cierzniak/ha-dynamiczne-info/blob/main/custom_components/dynamiczne_info/blueprints/automation/dynamiczne_info/run_load.yaml
+  input:
+    run_now_entity:
+      name: Sygnal "uruchom teraz"
+      description: Binary sensor run_now danego odbiornika.
+      selector:
+        entity:
+          filter:
+            - domain: binary_sensor
+              integration: dynamiczne_info
+    start_action:
+      name: Akcja startu
+      description: Co zrobic, gdy odbiornik ma ruszyc (np. wlacz ladowarke).
+      default: []
+      selector:
+        action: {}
+    stop_action:
+      name: Akcja stopu
+      description: Co zrobic, gdy odbiornik ma sie zatrzymac (np. wylacz ladowarke).
+      default: []
+      selector:
+        action: {}
+
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: !input run_now_entity
+    to: "on"
+    id: start
+  - trigger: state
+    entity_id: !input run_now_entity
+    to: "off"
+    id: stop
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: start
+        sequence: !input start_action
+      - conditions:
+          - condition: trigger
+            id: stop
+        sequence: !input stop_action

@@ -1,0 +1,57 @@
+name: Lint & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ruff:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install ruff
+      - run: ruff check .
+      - run: ruff format --check .
+
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements_test.txt
+      - run: pytest
+
+  homeassistant:
+    name: Home Assistant (${{ matrix.ha }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - ha: "2025.3.0"
+            python: "3.13"
+          - ha: latest
+            python: "3.14"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -r requirements_test.txt
+      - name: Install Home Assistant
+        env:
+          HA_VERSION: ${{ matrix.ha }}
+        run: |
+          if [ "$HA_VERSION" = latest ]; then
+            pip install homeassistant
+          else
+            pip install "homeassistant==$HA_VERSION"
+          fi
+      - run: python -m pytest

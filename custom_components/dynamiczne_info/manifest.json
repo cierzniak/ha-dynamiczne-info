@@ -1,0 +1,14 @@
+{
+  "domain": "dynamiczne_info",
+  "name": "dynamiczne.info",
+  "after_dependencies": ["lovelace"],
+  "codeowners": ["@cierzniak"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http"],
+  "documentation": "https://github.com/cierzniak/ha-dynamiczne-info",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/cierzniak/ha-dynamiczne-info/issues",
+  "requirements": [],
+  "version": "0.3.0"
+}

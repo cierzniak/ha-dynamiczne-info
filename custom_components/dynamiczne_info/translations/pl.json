@@ -1,0 +1,77 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "dynamiczne.info",
+        "description": "Wybierz operatora dystrybucji.",
+        "data": { "operator": "Operator" }
+      },
+      "tariff": {
+        "title": "Taryfa",
+        "data": {
+          "tariff": "Taryfa",
+          "include_sell": "Pobieraj też ceny sprzedaży (odkupu)"
+        }
+      }
+    },
+    "error": { "cannot_connect": "Nie można połączyć się z API dynamiczne.info." },
+    "abort": {
+      "already_configured": "Ta para operator/taryfa jest już skonfigurowana.",
+      "cannot_connect": "Nie można połączyć się z API dynamiczne.info."
+    }
+  },
+  "config_subentries": {
+    "load": {
+      "initiate_flow": { "user": "Dodaj odbiornik" },
+      "entry_type": "Odbiornik",
+      "step": {
+        "user": {
+          "title": "Dodaj odbiornik",
+          "description": "Sterowalne urządzenie (ładowarka EV, bojler, ...).",
+          "data": { "name": "Nazwa" }
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "current_price": { "name": "Cena bieżąca" },
+      "current_advice": {
+        "name": "Wskazówka",
+        "state": { "use": "Używaj", "neutral": "Neutralnie", "limit": "Ogranicz" }
+      },
+      "current_sell_price": { "name": "Cena sprzedaży bieżąca" },
+      "next_cheap_hour": { "name": "Następna tania godzina" },
+      "next_sell_hour": { "name": "Następna godzina sprzedaży" },
+      "cheapest_hour_today": { "name": "Najtańsza godzina dziś" },
+      "planned_start": { "name": "Zaplanowany start" }
+    },
+    "binary_sensor": {
+      "sell_now": { "name": "Sprzedawaj teraz" },
+      "run_now": { "name": "Uruchom teraz" }
+    },
+    "switch": {
+      "schedule": { "name": "Harmonogram" }
+    },
+    "select": {
+      "mode": {
+        "name": "Tryb",
+        "state": {
+          "cheapest_window": "Najtańsze okno",
+          "fixed": "Sztywny start",
+          "price_below": "Poniżej progu ceny",
+          "advice_use": "Godziny zalecane (use)"
+        }
+      }
+    },
+    "number": {
+      "duration": { "name": "Czas pracy (godziny)" },
+      "price_ceiling": { "name": "Próg ceny" }
+    },
+    "time": {
+      "ready_by": { "name": "Gotowe do" },
+      "start_at": { "name": "Start o" },
+      "stop_at": { "name": "Stop o" }
+    }
+  }
+}
