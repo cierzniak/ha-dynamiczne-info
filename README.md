@@ -24,16 +24,22 @@ rozładować / sprzedać do sieci (wysoka cena odkupu).
   przez całą integrację, również bez dodanych odbiorników).
 - Dostęp sieciowy do `https://dynamiczne.info` (publiczne API; bez konta, bez klucza).
 
-## Instalacja (HACS / Marketplace)
+## Instalacja (HACS / Katalog społeczności)
 
-[![Otwórz swoją instancję Home Assistant i dodaj to repozytorium do HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=cierzniak&repository=ha-dynamiczne-info&category=integration)
+Najprościej przyciskiem (otwiera repozytorium w HACS albo w Katalogu społeczności, zależnie
+od wersji HA):
 
-Kliknij badge powyżej, żeby dodać repozytorium jednym kliknięciem, albo ręcznie:
+[![Otwórz repozytorium w Home Assistant](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=cierzniak&repository=ha-dynamiczne-info&category=integration)
 
-1. HACS (od Home Assistant 2026.11: **Ustawienia -> Marketplace**) -> ⋮ ->
-   **Własne repozytoria** (Custom repositories).
-2. Dodaj `https://github.com/cierzniak/ha-dynamiczne-info` z kategorią **Integration**.
-3. Zainstaluj **dynamiczne.info**, potem zrestartuj Home Assistant.
+Ręcznie:
+
+1. Dodaj repozytorium `https://github.com/cierzniak/ha-dynamiczne-info` jako własne,
+   typ **Integracja** (*Integration*):
+   - **HA 2026.11 i nowsze:** Ustawienia (*Settings*) -> **Katalog społeczności**
+     (*Marketplace*) -> ⋮ -> *Niestandardowe repozytoria* (*Custom repositories*);
+     wymaga połączenia z GitHubem, kreator to zaproponuje,
+   - **HA do 2026.10:** HACS -> ⋮ -> *Niestandardowe repozytoria* (*Custom repositories*).
+2. Zainstaluj (*Install*) **dynamiczne.info** i zrestartuj Home Assistant.
 
 Karta Lovelace (`custom:dynamiczne-info-card`) jest spakowana **wewnątrz** integracji i
 rejestruje się automatycznie przy starcie - jedno repo, bez osobnego pluginu HACS, bez
@@ -265,7 +271,7 @@ oraz na dashboardach.
 3. **Usuń starą integrację z HACS**: HACS -> *Pstryk Fixing* -> ⋮ -> **Usuń**, a potem
    w **Własnych repozytoriach** usuń `https://github.com/cierzniak/ha-pstryk-fixing`.
    Zrestartuj Home Assistant.
-4. **Zainstaluj dynamiczne.info** wg [Instalacji](#instalacja-hacs--marketplace),
+4. **Zainstaluj dynamiczne.info** wg [Instalacji](#instalacja-hacs--katalog-społeczności),
    zrestartuj, dodaj integrację i odtwórz odbiorniki z punktu 1.
 5. **Popraw odwołania** w automatyzacjach, skryptach, szablonach i na dashboardach:
 
