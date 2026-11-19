@@ -17,7 +17,7 @@ from homeassistant.helpers.typing import ConfigType
 from homeassistant.loader import async_get_integration
 
 from .api import DynamiczneInfoApiClient
-from .const import DEFAULT_BASE_URL, DOMAIN, SUBENTRY_TYPE_LOAD
+from .const import CONF_API_TOKEN, DEFAULT_BASE_URL, DOMAIN, SUBENTRY_TYPE_LOAD
 from .coordinator import DynamiczneInfoOutlookCoordinator
 from .load_scheduler import LoadScheduler
 
@@ -99,7 +99,9 @@ async def async_setup_entry(
 ) -> bool:
     """Set up dynamiczne.info from a config entry."""
     session = async_get_clientsession(hass)
-    client = DynamiczneInfoApiClient(DEFAULT_BASE_URL, session)
+    client = DynamiczneInfoApiClient(
+        DEFAULT_BASE_URL, session, entry.options.get(CONF_API_TOKEN)
+    )
     integration = await async_get_integration(hass, DOMAIN)
     coordinator = DynamiczneInfoOutlookCoordinator(
         hass, entry, client, str(integration.version)

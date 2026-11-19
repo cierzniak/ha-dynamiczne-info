@@ -10,6 +10,7 @@ from homeassistant.config_entries import (
     ConfigFlow,
     ConfigFlowResult,
     ConfigSubentryFlow,
+    OptionsFlow,
     SubentryFlowResult,
 )
 from homeassistant.core import callback
@@ -21,10 +22,17 @@ from homeassistant.helpers.selector import (
     SelectSelectorConfig,
     SelectSelectorMode,
     TextSelector,
+    TextSelectorConfig,
+    TextSelectorType,
 )
 
-from .api import DynamiczneInfoApiClient, DynamiczneInfoApiError
+from .api import (
+    DynamiczneInfoApiClient,
+    DynamiczneInfoApiError,
+    DynamiczneInfoAuthError,
+)
 from .const import (
+    CONF_API_TOKEN,
     CONF_INCLUDE_SELL,
     CONF_LOAD_NAME,
     CONF_OPERATOR,
@@ -120,6 +128,11 @@ class DynamiczneInfoConfigFlow(ConfigFlow, domain=DOMAIN):
             DEFAULT_BASE_URL, async_get_clientsession(self.hass)
         )
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        return DynamiczneInfoOptionsFlow()
+
     @classmethod
     @callback
     def async_get_supported_subentry_types(
@@ -127,6 +140,46 @@ class DynamiczneInfoConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> dict[str, type[ConfigSubentryFlow]]:
         """Loads (EV, boiler, ...) are added as subentries of a tariff entry."""
         return {SUBENTRY_TYPE_LOAD: LoadSubentryFlowHandler}
+
+
+class DynamiczneInfoOptionsFlow(OptionsFlow):
+    """Optional API token; an empty field means anonymous access."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            token = (user_input.get(CONF_API_TOKEN) or "").strip()
+            if not token:
+                return self.async_create_entry(data={})
+            client = DynamiczneInfoApiClient(
+                DEFAULT_BASE_URL, async_get_clientsession(self.hass), token
+            )
+            try:
+                await client.async_list_operators()
+            except DynamiczneInfoAuthError:
+                errors["base"] = "invalid_auth"
+            except DynamiczneInfoApiError:
+                errors["base"] = "cannot_connect"
+            else:
+                return self.async_create_entry(data={CONF_API_TOKEN: token})
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(
+                vol.Schema(
+                    {
+                        vol.Optional(CONF_API_TOKEN): TextSelector(
+                            TextSelectorConfig(type=TextSelectorType.PASSWORD)
+                        )
+                    }
+                ),
+                user_input or self.config_entry.options,
+            ),
+            errors=errors,
+            description_placeholders={"token_url": f"{DEFAULT_BASE_URL}/api/token"},
+        )
 
 
 class LoadSubentryFlowHandler(ConfigSubentryFlow):

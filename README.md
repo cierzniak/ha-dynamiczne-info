@@ -22,7 +22,7 @@ rozładować / sprzedać do sieci (wysoka cena odkupu).
 
 - Home Assistant `2025.3` lub nowszy (API podwpisów konfiguracji jest wymagane
   przez całą integrację, również bez dodanych odbiorników).
-- Dostęp sieciowy do `https://dynamiczne.info` (publiczne API; bez konta, bez klucza).
+- Dostęp sieciowy do `https://dynamiczne.info` (publiczne API; działa bez konta i bez klucza).
 
 ## Instalacja (HACS / Katalog społeczności)
 
@@ -58,8 +58,21 @@ Ustawienia -> Urządzenia i usługi -> **Dodaj integrację** -> *dynamiczne.info
 1. Wybierz swojego **operatora dystrybucji** (pobierany z API).
 2. Wybierz **taryfę** oraz czy pobierać **ceny sprzedaży (odkupu)**.
 
-Adres API jest stały (`dynamiczne.info`) - nie ma nic więcej do ustawiania. Możesz
-dodać integrację wiele razy, dla kilku kombinacji operator/taryfa.
+Adres API jest stały (`dynamiczne.info`). Możesz dodać integrację wiele razy, dla kilku
+kombinacji operator/taryfa.
+
+### Klucz API (opcjonalnie)
+
+Bez klucza API pozwala na 10 zapytań na minutę z jednego adresu IP - integracji to
+wystarcza (pyta co 30 minut). Klucz przydaje się, gdy z tego samego adresu IP korzystają
+też inne skrypty lub urządzenia: daje 60 zapytań na minutę niezależnie od IP.
+
+1. Odbierz bezpłatny klucz na <https://dynamiczne.info/api/token>.
+2. Ustawienia -> Urządzenia i usługi -> *dynamiczne.info* -> wpis operator/taryfa ->
+   **Konfiguruj** -> wklej klucz. Integracja sprawdzi go i przeładuje wpis.
+
+Klucz ustawia się osobno dla każdego wpisu operator/taryfa. Puste pole wraca do dostępu
+bez klucza.
 
 ## Encje
 

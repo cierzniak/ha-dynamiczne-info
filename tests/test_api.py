@@ -3,13 +3,18 @@
 from typing import Any
 
 import pytest
-from api import DynamiczneInfoApiClient, DynamiczneInfoApiError
+from api import (
+    DynamiczneInfoApiClient,
+    DynamiczneInfoApiError,
+    DynamiczneInfoAuthError,
+)
 
 
 class _FakeResponse:
     def __init__(self, status: int, payload: Any) -> None:
         self.status = status
         self._payload = payload
+        self.headers: dict[str, str] = {"Retry-After": "30"}
 
     def raise_for_status(self) -> None:
         if self.status >= 400:
@@ -34,17 +39,49 @@ class _FakeSession:
     def __init__(self, response: _FakeResponse) -> None:
         self._response = response
         self.calls: list[tuple[str, dict[str, str] | None]] = []
+        self.headers: list[dict[str, str] | None] = []
 
     def get(
-        self, url: str, params: dict[str, str] | None = None, timeout: Any = None
+        self,
+        url: str,
+        params: dict[str, str] | None = None,
+        headers: dict[str, str] | None = None,
+        timeout: Any = None,
     ) -> _FakeGet:
         self.calls.append((url, params))
+        self.headers.append(headers)
         return _FakeGet(self._response)
 
 
-def _client(status: int, payload: Any) -> tuple[DynamiczneInfoApiClient, _FakeSession]:
+def _client(
+    status: int, payload: Any, token: str | None = None
+) -> tuple[DynamiczneInfoApiClient, _FakeSession]:
     session = _FakeSession(_FakeResponse(status, payload))
-    return DynamiczneInfoApiClient("https://example.test/", session), session
+    return DynamiczneInfoApiClient("https://example.test/", session, token), session
+
+
+async def test_token_sent_as_bearer_header() -> None:
+    client, session = _client(200, {"data": []}, token="dyn_abc")
+    await client.async_list_operators()
+    assert session.headers[0] == {"Authorization": "Bearer dyn_abc"}
+
+
+async def test_no_token_sends_no_auth_header() -> None:
+    client, session = _client(200, {"data": []})
+    await client.async_list_operators()
+    assert session.headers[0] is None
+
+
+async def test_401_raises_auth_error() -> None:
+    client, _ = _client(401, {}, token="dyn_bad")
+    with pytest.raises(DynamiczneInfoAuthError):
+        await client.async_list_operators()
+
+
+async def test_429_raises_api_error_with_retry_after() -> None:
+    client, _ = _client(429, {})
+    with pytest.raises(DynamiczneInfoApiError, match="30"):
+        await client.async_list_operators()
 
 
 async def test_get_outlook_unwraps_data_and_passes_sell_true() -> None:
