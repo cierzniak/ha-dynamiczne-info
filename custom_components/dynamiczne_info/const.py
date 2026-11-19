@@ -12,6 +12,8 @@ DOMAIN: Final = "dynamiczne_info"
 CONF_OPERATOR: Final = "operator"
 CONF_TARIFF: Final = "tariff"
 CONF_INCLUDE_SELL: Final = "include_sell"
+# Optional API token, kept in entry.options (set via the options flow).
+CONF_API_TOKEN: Final = "api_token"
 
 # Load scheduler (config subentries on each operator/tariff entry).
 CONF_LOAD_NAME: Final = "name"

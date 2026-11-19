@@ -12,8 +12,8 @@ from . import DynamiczneInfoConfigEntry
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: DynamiczneInfoConfigEntry
 ) -> dict[str, Any]:
-    """Return diagnostics for a config entry. The API is anonymous, so there is
-    nothing to redact."""
+    """Return diagnostics for a config entry. The API token lives in
+    entry.options and is deliberately not included."""
     coordinator = entry.runtime_data
     return {
         "config": {

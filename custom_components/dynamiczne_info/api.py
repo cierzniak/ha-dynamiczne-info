@@ -13,12 +13,23 @@ class DynamiczneInfoApiError(Exception):
     """Raised when the dynamiczne.info API cannot be reached or returns an error."""
 
 
-class DynamiczneInfoApiClient:
-    """Calls the public, anonymous dynamiczne.info API."""
+class DynamiczneInfoAuthError(DynamiczneInfoApiError):
+    """Raised when the API rejects the API token (401)."""
 
-    def __init__(self, base_url: str, session: ClientSession) -> None:
+
+class DynamiczneInfoApiClient:
+    """Calls the public dynamiczne.info API, anonymously or with an API token.
+
+    Without a token the API allows 10 requests/min per IP, with one 60/min per
+    token (https://dynamiczne.info/api/token).
+    """
+
+    def __init__(
+        self, base_url: str, session: ClientSession, token: str | None = None
+    ) -> None:
         self._base_url = base_url.rstrip("/")
         self._session = session
+        self._headers = {"Authorization": f"Bearer {token}"} if token else None
 
     async def async_list_operators(self) -> list[dict[str, str]]:
         """Return the supported distribution operators (code + name)."""
@@ -51,10 +62,17 @@ class DynamiczneInfoApiClient:
         url = f"{self._base_url}{path}"
         try:
             async with self._session.get(
-                url, params=params, timeout=_TIMEOUT
+                url, params=params, headers=self._headers, timeout=_TIMEOUT
             ) as response:
+                if response.status == 401:
+                    raise DynamiczneInfoAuthError("Invalid or revoked API token")
                 if response.status == 404:
                     raise DynamiczneInfoApiError(f"Not found: {path}")
+                if response.status == 429:
+                    retry = response.headers.get("Retry-After", "?")
+                    raise DynamiczneInfoApiError(
+                        f"Rate limit exceeded, retry after {retry}s"
+                    )
                 response.raise_for_status()
                 body = await response.json()
         except ClientError as err:

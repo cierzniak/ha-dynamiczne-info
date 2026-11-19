@@ -4,7 +4,9 @@
       "user": {
         "title": "dynamiczne.info",
         "description": "Pick your distribution operator.",
-        "data": { "operator": "Operator" }
+        "data": {
+          "operator": "Operator"
+        }
       },
       "tariff": {
         "title": "Tariff",
@@ -14,44 +16,87 @@
         }
       }
     },
-    "error": { "cannot_connect": "Could not reach the dynamiczne.info API." },
+    "error": {
+      "cannot_connect": "Could not reach the dynamiczne.info API."
+    },
     "abort": {
       "already_configured": "This operator/tariff is already configured.",
       "cannot_connect": "Could not reach the dynamiczne.info API."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "API key",
+        "description": "Optional key from {token_url} (60 requests/min instead of 10/min per IP address). Leave empty for anonymous access.",
+        "data": {
+          "api_token": "API key"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid or revoked API key.",
+      "cannot_connect": "Could not reach the dynamiczne.info API."
+    }
+  },
   "config_subentries": {
     "load": {
-      "initiate_flow": { "user": "Add load" },
+      "initiate_flow": {
+        "user": "Add load"
+      },
       "entry_type": "Load",
       "step": {
         "user": {
           "title": "Add a load",
           "description": "A schedulable device (EV charger, boiler, ...).",
-          "data": { "name": "Name" }
+          "data": {
+            "name": "Name"
+          }
         }
       }
     }
   },
   "entity": {
     "sensor": {
-      "current_price": { "name": "Current price" },
+      "current_price": {
+        "name": "Current price"
+      },
       "current_advice": {
         "name": "Advice",
-        "state": { "use": "Use", "neutral": "Neutral", "limit": "Limit" }
+        "state": {
+          "use": "Use",
+          "neutral": "Neutral",
+          "limit": "Limit"
+        }
       },
-      "current_sell_price": { "name": "Current sell price" },
-      "next_cheap_hour": { "name": "Next cheap hour" },
-      "next_sell_hour": { "name": "Next sell hour" },
-      "cheapest_hour_today": { "name": "Cheapest hour today" },
-      "planned_start": { "name": "Planned start" }
+      "current_sell_price": {
+        "name": "Current sell price"
+      },
+      "next_cheap_hour": {
+        "name": "Next cheap hour"
+      },
+      "next_sell_hour": {
+        "name": "Next sell hour"
+      },
+      "cheapest_hour_today": {
+        "name": "Cheapest hour today"
+      },
+      "planned_start": {
+        "name": "Planned start"
+      }
     },
     "binary_sensor": {
-      "sell_now": { "name": "Sell now" },
-      "run_now": { "name": "Run now" }
+      "sell_now": {
+        "name": "Sell now"
+      },
+      "run_now": {
+        "name": "Run now"
+      }
     },
     "switch": {
-      "schedule": { "name": "Schedule" }
+      "schedule": {
+        "name": "Schedule"
+      }
     },
     "select": {
       "mode": {
@@ -65,13 +110,23 @@
       }
     },
     "number": {
-      "duration": { "name": "Duration (hours)" },
-      "price_ceiling": { "name": "Price ceiling" }
+      "duration": {
+        "name": "Duration (hours)"
+      },
+      "price_ceiling": {
+        "name": "Price ceiling"
+      }
     },
     "time": {
-      "ready_by": { "name": "Ready by" },
-      "start_at": { "name": "Start at" },
-      "stop_at": { "name": "Stop at" }
+      "ready_by": {
+        "name": "Ready by"
+      },
+      "start_at": {
+        "name": "Start at"
+      },
+      "stop_at": {
+        "name": "Stop at"
+      }
     }
   }
 }
